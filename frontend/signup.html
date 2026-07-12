@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Create your KAVACH INTELLIGENCE account — join as a citizen or request official access."
+    />
+    <title>Sign up — KAVACH INTELLIGENCE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <style>
+      /* Signup-specific styles */
+      .role-selector {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-3);
+      }
+      @media (min-width: 480px) {
+        .role-selector {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .role-option {
+        position: relative;
+        cursor: pointer;
+      }
+      .role-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .role-option__card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-4) var(--space-3);
+        border: 2px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        background: var(--color-surface);
+        transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        text-align: center;
+      }
+      .role-option input:checked + .role-option__card {
+        border-color: var(--color-primary);
+        background: var(--color-accent-soft);
+        box-shadow: 0 0 0 3px rgba(30,58,95,.12);
+      }
+      .role-option input:focus-visible + .role-option__card {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+      }
+      .role-option__card:hover {
+        border-color: var(--color-accent);
+        background: var(--color-background);
+      }
+      .role-option__icon {
+        width: 2rem;
+        height: 2rem;
+        color: var(--color-accent);
+      }
+      .role-option input:checked + .role-option__card .role-option__icon {
+        color: var(--color-primary);
+      }
+      .role-option__name {
+        font-size: var(--text-sm);
+        font-weight: 600;
+        color: var(--color-text);
+      }
+      .role-option__desc {
+        font-size: var(--text-xs);
+        color: var(--color-text-muted);
+        line-height: 1.4;
+      }
+
+      .email-hint {
+        margin-top: var(--space-1);
+        font-size: var(--text-xs);
+        color: var(--color-accent);
+        display: none;
+      }
+      .email-hint.is-visible {
+        display: block;
+      }
+      .conditional-fields {
+        display: none;
+      }
+      .conditional-fields.is-visible {
+        display: block;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-4);
+      }
+      @media (max-width: 480px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+      .alert--info {
+        color: var(--color-primary);
+        background: var(--color-accent-soft);
+        border: 1px solid rgba(30,58,95,.15);
+      }
+      .alert--success {
+        color: #047857;
+        background: #ecfdf5;
+        border: 1px solid rgba(4,120,87,.15);
+      }
+      .signup-card {
+        max-width: 32rem;
+      }
+      .auth-steps {
+        display: flex;
+        gap: var(--space-2);
+        margin-bottom: var(--space-6);
+      }
+      .auth-step {
+        flex: 1;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--color-border);
+        transition: background 0.3s;
+      }
+      .auth-step.is-active {
+        background: var(--color-primary);
+      }
+      .auth-step.is-done {
+        background: var(--color-primary);
+      }
+      .step-section {
+        display: none;
+        animation: fadeIn 0.25s ease;
+      }
+      .step-section.is-active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  </head>
+  <body class="login-page">
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header" role="banner">
+      <div class="container site-header__inner">
+        <a class="brand" href="index.html" aria-label="KAVACH INTELLIGENCE home">
+          <span class="brand__mark" aria-hidden="true">KI</span>
+          <span class="brand__text">
+            <span class="brand__name">KAVACH INTELLIGENCE</span>
+            <span class="brand__tagline">Cybercrime investigation</span>
+          </span>
+        </a>
+      </div>
+    </header>
+
+    <div class="auth-layout">
+      <aside class="auth-panel" aria-label="Platform information">
+        <div class="auth-panel__inner">
+          <a class="brand auth-panel__brand" href="index.html">
+            <span class="brand__mark" aria-hidden="true">KI</span>
+            <span class="brand__text">
+              <span class="brand__name">KAVACH INTELLIGENCE</span>
+              <span class="brand__tagline">Cybercrime investigation</span>
+            </span>
+          </a>
+          <h2 class="auth-panel__title">Join the platform</h2>
+          <p class="auth-panel__lead">
+            Citizens can report scams directly. Official personnel require approval
+            before accessing investigation tools.
+          </p>
+          <ul class="auth-panel__list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Citizens get instant access to report scams
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Official roles are verified and approved by supervisors
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Domain-specific emails ensure identity verification
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="auth-main" id="main">
+        <div class="auth-card signup-card">
+          <div class="auth-card__mobile-brand">
+            <a class="brand" href="index.html">
+              <span class="brand__mark" aria-hidden="true">KI</span>
+              <span class="brand__text">
+                <span class="brand__name">KAVACH INTELLIGENCE</span>
+              </span>
+            </a>
+          </div>
+
+          <div class="auth-card__header">
+            <span class="badge badge--secure auth-badge">Secure registration</span>
+            <h1>Create account</h1>
+            <p>Select your role and provide the required details to get started.</p>
+          </div>
+
+          <!-- Progress Steps -->
+          <div class="auth-steps" aria-label="Registration progress">
+            <div class="auth-step is-active" data-step-bar="1"></div>
+            <div class="auth-step" data-step-bar="2"></div>
+            <div class="auth-step" data-step-bar="3"></div>
+          </div>
+
+          <div id="signup-error" class="alert alert--error" role="alert" hidden></div>
+          <div id="signup-success" class="alert alert--success" role="alert" hidden></div>
+          <div id="signup-pending" class="alert alert--info" role="alert" hidden></div>
+
+          <form id="signup-form" class="auth-form" novalidate>
+            <!-- STEP 1: Role Selection -->
+            <div class="step-section is-active" data-step="1">
+              <div class="form-field">
+                <label class="form-field__label">Select your role</label>
+                <div class="role-selector">
+                  <label class="role-option">
+                    <input type="radio" name="role" value="citizen" checked />
+                    <div class="role-option__card">
+                      <svg class="role-option__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      <span class="role-option__name">Citizen</span>
+                      <span class="role-option__desc">Report scams</span>
+                    </div>
+                  </label>
+                  <label class="role-option">
+                    <input type="radio" name="role" value="moderator" />
+                    <div class="role-option__card">
+                      <svg class="role-option__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      <span class="role-option__name">Moderator</span>
+                      <span class="role-option__desc">Review reports</span>
+                    </div>
+                  </label>
+                  <label class="role-option">
+                    <input type="radio" name="role" value="investigator" />
+                    <div class="role-option__card">
+                      <svg class="role-option__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" />
+                      </svg>
+                      <span class="role-option__name">Investigator</span>
+                      <span class="role-option__desc">Solve cases</span>
+                    </div>
+                  </label>
+                  <label class="role-option">
+                    <input type="radio" name="role" value="supervisor" />
+                    <div class="role-option__card">
+                      <svg class="role-option__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      <span class="role-option__name">Supervisor</span>
+                      <span class="role-option__desc">Oversee operations</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <button type="button" class="btn btn--primary" data-next-step="2">Continue</button>
+            </div>
+
+            <!-- STEP 2: Account Details -->
+            <div class="step-section" data-step="2">
+              <div class="form-field">
+                <label class="form-field__label" for="signup-name">Full name</label>
+                <input
+                  class="form-field__input"
+                  type="text"
+                  id="signup-name"
+                  name="name"
+                  placeholder="e.g. Priya Sharma"
+                  required
+                  autocomplete="name"
+                />
+                <span id="error-name" class="form-field__error" role="alert" hidden></span>
+              </div>
+
+              <div class="form-field">
+                <label class="form-field__label" for="signup-email">Email address</label>
+                <input
+                  class="form-field__input"
+                  type="email"
+                  id="signup-email"
+                  name="email"
+                  placeholder="you@citizen.ki"
+                  required
+                  autocomplete="email"
+                />
+                <span id="email-hint" class="email-hint is-visible">Use your <strong>@citizen.ki</strong> domain email</span>
+                <span id="error-email" class="form-field__error" role="alert" hidden></span>
+              </div>
+
+              <div class="form-field">
+                <label class="form-field__label" for="signup-password">Password</label>
+                <input
+                  class="form-field__input"
+                  type="password"
+                  id="signup-password"
+                  name="password"
+                  placeholder="Minimum 6 characters"
+                  required
+                  autocomplete="new-password"
+                  minlength="6"
+                />
+                <span id="error-password" class="form-field__error" role="alert" hidden></span>
+              </div>
+
+              <div class="form-field">
+                <label class="form-field__label" for="signup-phone">Phone number</label>
+                <input
+                  class="form-field__input"
+                  type="tel"
+                  id="signup-phone"
+                  name="phone"
+                  placeholder="+91 XXXXX XXXXX"
+                  autocomplete="tel"
+                />
+              </div>
+
+              <!-- Conditional fields for official roles -->
+              <div class="conditional-fields" id="official-fields">
+                <div class="form-field">
+                  <label class="form-field__label" for="signup-badge">Badge ID</label>
+                  <input
+                    class="form-field__input"
+                    type="text"
+                    id="signup-badge"
+                    name="badgeId"
+                    placeholder="e.g. MOD-4521"
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="signup-bureau">Bureau / Department</label>
+                  <input
+                    class="form-field__input"
+                    type="text"
+                    id="signup-bureau"
+                    name="bureau"
+                    placeholder="e.g. Cyber Crime Unit — Zone 4"
+                    autocomplete="organization"
+                  />
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="signup-legal">Legal / Government ID</label>
+                  <input
+                    class="form-field__input"
+                    type="text"
+                    id="signup-legal"
+                    name="legal_id"
+                    placeholder="e.g. Aadhaar or PAN"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <!-- Citizen-only field -->
+              <div class="conditional-fields" id="citizen-fields">
+                <div class="form-field">
+                  <label class="form-field__label" for="signup-address">Address</label>
+                  <textarea
+                    class="form-field__input"
+                    id="signup-address"
+                    name="address"
+                    rows="2"
+                    placeholder="Your residential address (optional)"
+                    autocomplete="street-address"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: var(--space-3);">
+                <button type="button" class="btn btn--ghost" data-prev-step="1">← Back</button>
+                <button type="button" class="btn btn--primary" data-next-step="3" style="flex:1">Continue</button>
+              </div>
+            </div>
+
+            <!-- STEP 3: Review & Submit -->
+            <div class="step-section" data-step="3">
+              <div style="margin-bottom: var(--space-5);">
+                <h2 style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Review your details</h2>
+                <div id="review-summary" style="font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.8;">
+                  <!-- filled by JS -->
+                </div>
+              </div>
+
+              <div id="pending-notice" class="alert alert--info" hidden>
+                <strong>Approval required:</strong> Your account will need supervisor/admin approval before you can sign in.
+              </div>
+
+              <div style="display: flex; gap: var(--space-3); margin-top: var(--space-4);">
+                <button type="button" class="btn btn--ghost" data-prev-step="2">← Back</button>
+                <button type="submit" class="btn btn--primary" id="submit-signup-btn" style="flex:1">Create account</button>
+              </div>
+            </div>
+          </form>
+
+          <p style="text-align:center; margin-top: var(--space-6); font-size: var(--text-sm); color: var(--color-text-muted);">
+            Already have an account?
+            <a href="login.html" style="color: var(--color-accent); font-weight: 500;">Sign in</a>
+          </p>
+
+          <a class="auth-card__back" href="index.html">&larr; Back to home</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/signup.js"></script>
+  </body>
+</html>

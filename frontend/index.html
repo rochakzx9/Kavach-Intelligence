@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="KAVACH INTELLIGENCE — AI-assisted cybercrime investigation platform for law enforcement. Assistive analysis with human review at every step."
+    />
+    <title>KAVACH INTELLIGENCE — Cybercrime Investigation Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/landing.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header" role="banner">
+      <div class="container site-header__inner">
+        <a class="brand" href="index.html" aria-label="KAVACH INTELLIGENCE home">
+          <span class="brand__mark" aria-hidden="true">KI</span>
+          <span class="brand__text">
+            <span class="brand__name">KAVACH INTELLIGENCE</span>
+            <span class="brand__tagline">Cybercrime investigation</span>
+          </span>
+        </a>
+
+        <button
+          type="button"
+          class="nav-toggle"
+          data-nav-toggle
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open navigation menu"
+        >
+          <span class="nav-toggle__icon" aria-hidden="true">
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+          </span>
+        </button>
+
+        <nav id="site-nav" class="site-nav" data-site-nav aria-label="Primary">
+          <ul class="site-nav__list">
+            <li><a class="site-nav__link" href="#capabilities">Capabilities</a></li>
+            <li><a class="site-nav__link" href="#workflow">Workflow</a></li>
+            <li><a class="site-nav__link" href="#trust">Trust</a></li>
+          </ul>
+        </nav>
+
+        <div class="header-actions">
+          <a class="btn btn--secondary" href="login.html">Sign in</a>
+          <a class="btn btn--primary" href="login.html">Access Platform</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero__inner">
+          <div class="hero__content">
+            <div class="hero__badges">
+              <span class="badge">Government-grade</span>
+              <span class="badge badge--ai">AI-assisted · Human reviewed</span>
+            </div>
+            <h1 id="hero-title">
+              Accelerate cybercrime investigations with <em>assistive</em> intelligence
+            </h1>
+            <p class="hero__subtitle">
+              KAVACH INTELLIGENCE helps investigators organize evidence, surface
+              correlations, and map relationships across cases — with every AI
+              output clearly labeled for analyst review before action.
+            </p>
+            <div class="hero__actions">
+              <a class="btn btn--primary btn--lg" href="login.html">Access Platform</a>
+              <a class="btn btn--secondary btn--lg" href="#capabilities">Explore capabilities</a>
+            </div>
+            <p class="hero__note">
+              Built for operational clarity — not autonomous detection. Investigators
+              remain in control of confirmations, reports, and case closure.
+            </p>
+          </div>
+
+          <aside class="hero__panel" aria-label="Investigation snapshot example">
+            <p class="hero__panel-title">Case workspace preview</p>
+            <div class="hero-stat">
+              <span class="hero-stat__label">Active case</span>
+              <span class="hero-stat__value">CYB-2026-0142</span>
+              <span class="hero-stat__hint">UPI fraud · 12 evidence items</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat__label">OCR extractions</span>
+              <span class="hero-stat__value hero-stat__value--review">3 pending review</span>
+              <span class="hero-stat__hint">Suggested fields — requires confirmation</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat__label">Correlation suggestions</span>
+              <span class="hero-stat__value hero-stat__value--pending">2 new links</span>
+              <span class="hero-stat__hint">Shared domain across 4 cases</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat__label">Threat score</span>
+              <span class="hero-stat__value">72 / 100</span>
+              <span class="hero-stat__hint">Factors documented · analyst override available</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section
+        id="capabilities"
+        class="section capabilities"
+        aria-labelledby="capabilities-title"
+      >
+        <div class="container">
+          <header class="section__header section__header--center">
+            <span class="section__eyebrow">Platform capabilities</span>
+            <h2 id="capabilities-title">Everything investigators need in one workspace</h2>
+            <p class="section__lead">
+              From intake to court-ready reports — structured modules that mirror
+              real investigation workflows, with transparency at every AI touchpoint.
+            </p>
+          </header>
+
+          <div class="grid grid--capabilities">
+            <article class="card capability-card">
+              <div class="capability-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              </div>
+              <h3 class="capability-card__title">Investigation acceleration</h3>
+              <p class="capability-card__text">
+                Centralize case metadata, assignees, and status in a single operational
+                dashboard. Quick actions deep-link to evidence, correlations, and reports
+                without context switching.
+              </p>
+            </article>
+
+            <article class="card capability-card">
+              <div class="capability-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                </svg>
+              </div>
+              <h3 class="capability-card__title">Evidence correlation</h3>
+              <p class="capability-card__text">
+                Surface suggested links between phones, UPI IDs, domains, and accounts
+                across cases. Every correlation requires explicit investigator confirmation
+                before it enters the record.
+              </p>
+            </article>
+
+            <article class="card capability-card">
+              <div class="capability-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2"/>
+                  <path d="M8 21h8M12 17v4"/>
+                </svg>
+              </div>
+              <h3 class="capability-card__title">Scam infrastructure mapping</h3>
+              <p class="capability-card__text">
+                Track repeating domains, payment handles, and hosting patterns. Intelligence
+                feed highlights cross-case infrastructure without claiming autonomous
+                attribution.
+              </p>
+            </article>
+
+            <article class="card capability-card">
+              <div class="capability-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                </svg>
+              </div>
+              <h3 class="capability-card__title">Relationship graph</h3>
+              <p class="capability-card__text">
+                Visualize confirmed entities and links in an interactive graph. Filter by
+                node type, inspect details, and navigate to source evidence with full audit
+                trail support.
+              </p>
+            </article>
+
+            <article class="card capability-card">
+              <div class="capability-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                </svg>
+              </div>
+              <h3 class="capability-card__title">Investigation reports</h3>
+              <p class="capability-card__text">
+                Generate structured PDF reports with selectable sections, analyst notes,
+                and evidence indices. Supervisor review workflow supported for bureau
+                compliance.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="workflow"
+        class="section workflow-section"
+        aria-labelledby="workflow-title"
+      >
+        <div class="container">
+          <header class="section__header section__header--center">
+            <span class="section__eyebrow">Investigator workflow</span>
+            <h2 id="workflow-title">Five steps from intake to closure</h2>
+            <p class="section__lead">
+              A disciplined process designed for cybercrime units — OCR and AI assist
+              at defined stages, never replacing investigator judgment.
+            </p>
+          </header>
+
+          <ol class="workflow">
+            <li class="workflow-step">
+              <span class="workflow-step__number" aria-hidden="true">1</span>
+              <div>
+                <h3 class="workflow-step__title">Open case &amp; intake</h3>
+                <p class="workflow-step__text">
+                  Create a case with crime type, tags, and assignee. Capture initial
+                  complaint details and link related references.
+                </p>
+              </div>
+            </li>
+            <li class="workflow-step">
+              <span class="workflow-step__number" aria-hidden="true">2</span>
+              <div>
+                <h3 class="workflow-step__title">Upload evidence</h3>
+                <p class="workflow-step__text">
+                  Attach screenshots, chats, PDFs, and transaction records. Track upload
+                  status and chain-of-custody metadata.
+                </p>
+              </div>
+            </li>
+            <li class="workflow-step">
+              <span class="workflow-step__number" aria-hidden="true">3</span>
+              <div>
+                <h3 class="workflow-step__title">Review OCR extractions</h3>
+                <p class="workflow-step__text">
+                  AI suggests phone numbers, UPI IDs, and account details. Investigators
+                  approve or edit each field before it enters the case graph.
+                </p>
+              </div>
+            </li>
+            <li class="workflow-step">
+              <span class="workflow-step__number" aria-hidden="true">4</span>
+              <div>
+                <h3 class="workflow-step__title">Confirm correlations &amp; graph</h3>
+                <p class="workflow-step__text">
+                  Review cross-case link suggestions, confirm relationships, and explore
+                  the entity graph for infrastructure patterns.
+                </p>
+              </div>
+            </li>
+            <li class="workflow-step">
+              <span class="workflow-step__number" aria-hidden="true">5</span>
+              <div>
+                <h3 class="workflow-step__title">Generate report &amp; close</h3>
+                <p class="workflow-step__text">
+                  Compile investigation-ready documentation with threat score factors,
+                  timeline, and analyst notes. Supervisor approval when required.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section
+        id="trust"
+        class="section section--tight trust-strip"
+        aria-labelledby="trust-title"
+      >
+        <div class="container">
+          <h2 id="trust-title" class="sr-only">Trust and compliance</h2>
+          <div class="trust-strip__grid">
+            <div class="trust-item">
+              <span class="trust-item__label">Human in the loop</span>
+              <p class="trust-item__value">
+                All AI outputs labeled “Suggested — requires review.” No autonomous
+                enforcement or prosecution claims.
+              </p>
+            </div>
+            <div class="trust-item">
+              <span class="trust-item__label">Role-based access</span>
+              <p class="trust-item__value">
+                Investigator, supervisor, and admin surfaces with RBAC-aligned navigation
+                and audit-ready actions.
+              </p>
+            </div>
+            <div class="trust-item">
+              <span class="trust-item__label">Audit trail</span>
+              <p class="trust-item__value">
+                Case events, confirmations, and report generation logged for bureau
+                compliance and supervisory review.
+              </p>
+            </div>
+            <div class="trust-item">
+              <span class="trust-item__label">Data handling</span>
+              <p class="trust-item__value">
+                Designed for secure deployment with PII masking, export controls, and
+                environment-specific configuration.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section cta-section" aria-labelledby="cta-title">
+        <div class="container">
+          <div class="cta-box">
+            <h2 id="cta-title">Ready to streamline your cybercrime investigations?</h2>
+            <p>
+              Request platform access for your unit. KAVACH INTELLIGENCE is built to
+              support investigators — not replace them.
+            </p>
+            <a class="btn btn--secondary btn--lg" href="login.html">Access Platform</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <div class="site-footer__grid">
+          <div class="site-footer__brand">
+            <a class="brand" href="index.html">
+              <span class="brand__mark" aria-hidden="true">KI</span>
+              <span class="brand__text">
+                <span class="brand__name">KAVACH INTELLIGENCE</span>
+                <span class="brand__tagline">Cybercrime investigation</span>
+              </span>
+            </a>
+            <p class="site-footer__desc">
+              AI-assisted cybercrime investigation platform for law enforcement and
+              authorized bureau personnel. Operational clarity, investigator control,
+              government-grade design.
+            </p>
+          </div>
+          <div>
+            <h3 class="site-footer__heading">Platform</h3>
+            <ul class="site-footer__links">
+              <li><a href="#capabilities">Capabilities</a></li>
+              <li><a href="#workflow">Workflow</a></li>
+              <li><a href="login.html">Sign in</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="site-footer__heading">Documentation</h3>
+            <p class="site-footer__desc">
+              Planning specs live in the repository <code>docs/</code> folder
+              (FRONTEND_PLAN.md, ARCHITECTURE_PLAN.md).
+            </p>
+          </div>
+        </div>
+        <div class="site-footer__bottom">
+          <p>&copy; 2026 KAVACH INTELLIGENCE. For authorized use only.</p>
+          <p>Assistive intelligence · Human review required</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/main.js" defer></script>
+  </body>
+</html>

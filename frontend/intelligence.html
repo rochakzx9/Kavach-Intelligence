@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="KAVACH INTELLIGENCE intelligence feed — cross-case correlations and indicators."
+    />
+    <title>Intelligence Feed — KAVACH INTELLIGENCE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <style>
+      /* Page-specific styling for the premium Intelligence Feed card and filters */
+      .intel-tabs {
+        display: flex;
+        gap: var(--space-2);
+        margin-bottom: var(--space-6);
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+      }
+      .intel-tab {
+        padding: var(--space-3) var(--space-4);
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid transparent;
+        font-size: var(--text-sm);
+        font-weight: 600;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+      .intel-tab:hover {
+        color: var(--color-primary);
+      }
+      .intel-tab.is-active {
+        color: var(--color-accent);
+        border-bottom-color: var(--color-accent);
+      }
+      .intel-grid {
+        display: grid;
+        gap: var(--space-6);
+      }
+      @media (min-width: 1024px) {
+        .intel-grid {
+          grid-template-columns: 1.6fr 1fr;
+          align-items: start;
+        }
+      }
+      .intel-card {
+        padding: var(--space-5);
+        border-left: 4px solid var(--color-info);
+        transition: all var(--transition-base);
+      }
+      .intel-card:hover {
+        transform: translateY(-2px);
+      }
+      .intel-card--confirmed {
+        border-left-color: var(--color-success);
+      }
+      .intel-card--critical {
+        border-left-color: var(--color-danger);
+      }
+      .intel-card__meta {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        margin-bottom: var(--space-3);
+        flex-wrap: wrap;
+      }
+      .intel-card__type {
+        font-size: var(--text-xs);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+      }
+      .intel-card__title {
+        font-size: var(--text-base);
+        font-weight: 700;
+        margin-bottom: var(--space-2);
+        color: var(--color-primary);
+      }
+      .intel-card__desc {
+        font-size: var(--text-sm);
+        color: var(--color-text);
+        line-height: var(--leading-relaxed);
+        margin-bottom: var(--space-4);
+      }
+      .intel-card__footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-3);
+        padding-top: var(--space-3);
+        border-top: 1px solid var(--color-border);
+        flex-wrap: wrap;
+      }
+      .intel-card__links {
+        font-size: var(--text-xs);
+        color: var(--color-text-muted);
+      }
+      .intel-card__links a {
+        color: var(--color-accent);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .intel-card__links a:hover {
+        text-decoration: underline;
+      }
+      .spotlight-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+      }
+      .spotlight-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-3);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        font-size: var(--text-sm);
+      }
+      .spotlight-item__entity {
+        font-family: monospace;
+        font-weight: 600;
+        color: var(--color-primary);
+      }
+      .spotlight-item__count {
+        font-size: var(--text-xs);
+        font-weight: 700;
+        background: var(--color-accent-soft);
+        color: var(--color-accent);
+        padding: 2px 8px;
+        border-radius: 12px;
+      }
+    </style>
+  </head>
+  <body class="app-body">
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <div class="app-shell" data-app-shell>
+      <div class="app-sidebar__overlay" data-sidebar-overlay aria-hidden="true"></div>
+
+      <aside id="app-sidebar" class="app-sidebar" data-app-sidebar aria-label="Application navigation">
+        <div class="app-sidebar__head">
+          <a class="brand" href="dashboard.html" aria-label="Dashboard home">
+            <span class="brand__mark" aria-hidden="true">KI</span>
+            <span class="brand__text">
+              <span class="brand__name">KAVACH</span>
+              <span class="brand__tagline">Intelligence</span>
+            </span>
+          </a>
+          <button
+            type="button"
+            class="app-sidebar__collapse"
+            data-sidebar-collapse
+            aria-pressed="false"
+            aria-label="Collapse sidebar"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        <nav class="app-nav">
+          <div class="app-nav__section">
+            <p class="app-nav__label">Workspace</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="dashboard.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Dashboard</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="cases.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Cases</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link is-active" href="intelligence.html" aria-current="page">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Intelligence Feed</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="intelligence-search.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Search</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="app-nav__section">
+            <p class="app-nav__label">Output</p>
+            <ul>
+              <li>
+                <a class="app-nav__link is-disabled" href="#" aria-disabled="true" tabindex="-1">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Reports</span>
+                  <span class="app-nav__badge">Soon</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link is-disabled" href="#" aria-disabled="true" tabindex="-1">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Settings</span>
+                  <span class="app-nav__badge">Soon</span>
+                </a>
+            </ul>
+          </div>
+          <div class="app-nav__section" data-nav-mgmt hidden>
+            <p class="app-nav__label">Management</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="supervisor.html" data-nav-supervisor>
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Supervisor Portal</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="admin.html" data-nav-admin>
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Admin Panel</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <div class="app-main">
+        <header class="app-topbar" role="banner">
+          <button
+            type="button"
+            class="app-topbar__menu"
+            data-sidebar-toggle
+            aria-expanded="false"
+            aria-controls="app-sidebar"
+            aria-label="Open navigation menu"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+            </svg>
+          </button>
+
+          <form class="app-search" role="search" action="intelligence-search.html" method="GET">
+            <label class="sr-only" for="global-search">Search cases and intelligence</label>
+            <svg class="app-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" />
+            </svg>
+            <input
+              class="app-search__input"
+              type="search"
+              id="global-search"
+              name="q"
+              placeholder="Search cases, domains, UPI handles…"
+              autocomplete="off"
+            />
+          </form>
+
+          <div class="app-topbar__actions">
+            <button type="button" class="icon-btn" aria-label="Notifications, 3 unread">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="icon-btn__badge" data-notification-count>3</span>
+            </button>
+
+            <div class="user-menu" data-user-menu>
+              <button
+                type="button"
+                class="user-menu__trigger"
+                data-user-menu-trigger
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                <span class="user-menu__avatar" data-user-avatar aria-hidden="true">PS</span>
+                <span class="user-menu__name" data-user-name>Investigator</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="user-menu__dropdown" role="menu">
+                <p class="user-menu__meta">
+                  <strong data-user-menu-name>Investigator</strong><br />
+                  <span data-user-menu-meta>Cyber Crime Unit</span>
+                </p>
+                <a class="user-menu__item" href="cases.html" role="menuitem">My cases</a>
+                <button type="button" class="user-menu__item user-menu__item--danger" data-sign-out role="menuitem">
+                  Sign out
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="app-content" id="main">
+          <header class="page-header">
+            <div>
+              <h1 class="page-header__title">Intelligence Feed</h1>
+              <p class="page-header__subtitle">
+                Cross-case operational intelligence, repeating entity indicators, and AI cluster detections.
+              </p>
+            </div>
+          </header>
+
+          <section aria-label="Summary statistics">
+            <div class="stats-grid">
+              <article class="stat-card">
+                <p class="stat-card__label">Tracked Indicators</p>
+                <p class="stat-card__value" id="tracked-indicators">0</p>
+                <p class="stat-card__hint">Across all cyber cases</p>
+              </article>
+              <article class="stat-card stat-card--up">
+                <p class="stat-card__label">Active Clusters</p>
+                <p class="stat-card__value" id="active-clusters">0</p>
+                <p class="stat-card__hint">Requires active review</p>
+              </article>
+              <article class="stat-card stat-card--critical">
+                <p class="stat-card__label">High Severity</p>
+                <p class="stat-card__value" id="high-severity">0</p>
+                <p class="stat-card__hint">Confirmed threat links</p>
+              </article>
+              <article class="stat-card">
+                <p class="stat-card__label">Linkage Ratio</p>
+                <p class="stat-card__value" id="linkage-ratio">0%</p>
+                <p class="stat-card__hint">Cross-case pattern matches</p>
+              </article>
+            </div>
+          </section>
+
+          <div class="intel-tabs" role="tablist">
+            <button class="intel-tab is-active" data-filter="all" role="tab" aria-selected="true">All Indicators</button>
+            <button class="intel-tab" data-filter="domain" role="tab" aria-selected="false">Domains</button>
+            <button class="intel-tab" data-filter="upi" role="tab" aria-selected="false">UPI Handles</button>
+            <button class="intel-tab" data-filter="phone" role="tab" aria-selected="false">Phone Numbers</button>
+          </div>
+
+          <div class="intel-grid">
+            <section class="panel" aria-labelledby="feed-title">
+              <div class="panel__header">
+                <h2 class="panel__title" id="feed-title">Recurring Indicators Feed</h2>
+                <span class="badge badge--ai">Automatic Scan Active</span>
+              </div>
+              <div class="panel__body">
+                <div id="intel-feed-container" class="alert-panel__list">
+                  <!-- JS inserts feed cards here -->
+                </div>
+              </div>
+            </section>
+
+            <section class="panel" aria-labelledby="spotlight-title">
+              <div class="panel__header">
+                <h2 class="panel__title" id="spotlight-title">Indicator Spotlight</h2>
+              </div>
+              <div class="panel__body panel__body--padded">
+                <p class="page-header__subtitle" style="margin-bottom: var(--space-4)">
+                  Highest frequency indicators across the entire system.
+                </p>
+                <div class="spotlight-list" id="spotlight-container">
+                  <div style="padding: var(--space-4); text-align: center; color: var(--color-text-muted);">Loading spotlight...</div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/mock-data.js"></script>
+    <script src="js/intelligence.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

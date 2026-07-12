@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Sign in to KAVACH INTELLIGENCE — secure access for authorized cybercrime investigation personnel."
+    />
+    <title>Sign in — KAVACH INTELLIGENCE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+  </head>
+  <body class="login-page">
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header" role="banner">
+      <div class="container site-header__inner">
+        <a class="brand" href="index.html" aria-label="KAVACH INTELLIGENCE home">
+          <span class="brand__mark" aria-hidden="true">KI</span>
+          <span class="brand__text">
+            <span class="brand__name">KAVACH INTELLIGENCE</span>
+            <span class="brand__tagline">Cybercrime investigation</span>
+          </span>
+        </a>
+      </div>
+    </header>
+
+    <div class="auth-layout">
+      <aside class="auth-panel" aria-label="Platform information">
+        <div class="auth-panel__inner">
+          <a class="brand auth-panel__brand" href="index.html">
+            <span class="brand__mark" aria-hidden="true">KI</span>
+            <span class="brand__text">
+              <span class="brand__name">KAVACH INTELLIGENCE</span>
+              <span class="brand__tagline">Cybercrime investigation</span>
+            </span>
+          </a>
+          <h2 class="auth-panel__title">Secure bureau access</h2>
+          <p class="auth-panel__lead">
+            Assistive intelligence for investigators — every AI output labeled for
+            human review before case action.
+          </p>
+          <ul class="auth-panel__list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Role-based access with audit-ready session handling
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Evidence, correlations, and reports under investigator control
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Suggested links require analyst confirmation
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="auth-main" id="main">
+        <div class="auth-card">
+          <div class="auth-card__mobile-brand">
+            <a class="brand" href="index.html">
+              <span class="brand__mark" aria-hidden="true">KI</span>
+              <span class="brand__text">
+                <span class="brand__name">KAVACH INTELLIGENCE</span>
+              </span>
+            </a>
+          </div>
+
+          <div class="auth-card__header">
+            <span class="badge badge--secure auth-badge">Authorized personnel only</span>
+            <h1>Sign in</h1>
+            <p>Enter your bureau email or badge ID to access the investigation workspace.</p>
+          </div>
+
+          <div id="login-error" class="alert alert--error" role="alert" hidden></div>
+
+          <form id="login-form" class="auth-form" novalidate>
+            <div class="form-field">
+              <label class="form-field__label" for="identifier">Email or badge ID</label>
+              <input
+                class="form-field__input"
+                type="text"
+                id="identifier"
+                name="identifier"
+                autocomplete="username"
+                placeholder="investigator@cyber.gov or INV-2847"
+                required
+                aria-describedby="error-identifier"
+              />
+              <span id="error-identifier" class="form-field__error" role="alert" hidden></span>
+            </div>
+
+            <div class="form-field">
+              <label class="form-field__label" for="password">Password</label>
+              <input
+                class="form-field__input"
+                type="password"
+                id="password"
+                name="password"
+                autocomplete="current-password"
+                placeholder="Enter your password"
+                required
+                aria-describedby="error-password"
+              />
+              <span id="error-password" class="form-field__error" role="alert" hidden></span>
+            </div>
+
+            <div class="auth-form__row">
+              <label class="form-checkbox">
+                <input type="checkbox" name="remember" id="remember" />
+                Remember me on this device
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn--primary">Sign in</button>
+          </form>
+
+          <p style="text-align:center; margin-top: var(--space-4); font-size: var(--text-sm); color: var(--color-text-muted);">
+            Don't have an account?
+            <a href="signup.html" style="color: var(--color-accent); font-weight: 500;">Sign up</a>
+          </p>
+
+          <aside class="auth-demo-hint" aria-label="Demo credentials for hackathon">
+            <strong>Demo access (hackathon)</strong>
+            Email: <code>investigator@cyber.gov</code> · Badge: <code>INV-2847</code><br />
+            Password: <code>demo123</code><br />
+            Any non-empty email/badge and password also signs in for quick demos.
+          </aside>
+
+          <a class="auth-card__back" href="index.html">&larr; Back to home</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+  </body>
+</html>

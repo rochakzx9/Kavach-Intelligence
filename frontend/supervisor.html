@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="KAVACH INTELLIGENCE supervisor portal — review queues, sign-offs, and operations."
+    />
+    <title>Supervisor Portal — KAVACH INTELLIGENCE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <style>
+      /* Page-specific styling for the supervisor portal */
+      .queue-item {
+        padding: var(--space-5);
+        border-bottom: 1px solid var(--color-border);
+        transition: background var(--transition-fast);
+      }
+      .queue-item:hover {
+        background: rgba(248, 250, 252, 0.8);
+      }
+      .queue-item:last-child {
+        border-bottom: none;
+      }
+      .queue-item__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: var(--space-2);
+        flex-wrap: wrap;
+        gap: var(--space-2);
+      }
+      .queue-item__title {
+        font-size: var(--text-base);
+        font-weight: 700;
+        color: var(--color-primary);
+      }
+      .queue-item__meta {
+        font-size: var(--text-xs);
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-3);
+      }
+      .queue-item__actions {
+        display: flex;
+        gap: var(--space-2);
+        flex-wrap: wrap;
+      }
+      .supervisor-grid {
+        display: grid;
+        gap: var(--space-6);
+      }
+      @media (min-width: 1024px) {
+        .supervisor-grid {
+          grid-template-columns: 1.7fr 1fr;
+          align-items: start;
+        }
+      }
+      .access-denied-panel {
+        text-align: center;
+        padding: var(--space-16) var(--space-8);
+        max-width: 32rem;
+        margin: 4rem auto;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border-strong);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+      }
+      .access-denied-panel svg {
+        color: var(--color-danger);
+        margin-bottom: var(--space-4);
+      }
+      .roster-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+      }
+      .roster-card {
+        padding: var(--space-4);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+      }
+      .roster-card__avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--radius-sm);
+        background: var(--color-accent-soft);
+        color: var(--color-accent);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .roster-card__info {
+        flex: 1;
+        min-width: 0;
+      }
+      .roster-card__name {
+        font-size: var(--text-sm);
+        font-weight: 600;
+        color: var(--color-text);
+      }
+      .roster-card__cases {
+        font-size: var(--text-xs);
+        color: var(--color-text-muted);
+      }
+    </style>
+  </head>
+  <body class="app-body">
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <!-- Gated Access Denied Container (Shown via JS if roles mismatch) -->
+    <div id="access-denied-container" style="display: none;">
+      <main class="app-content">
+        <div class="access-denied-panel">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <h1 class="search-hero__title" style="color: var(--color-danger);">Access Restricted</h1>
+          <p class="search-hero__subtitle">Your investigator profile is not authorized to access the compliance, queue sign-off, or regulatory audit features of KAVACH.</p>
+          <a href="dashboard.html" class="btn btn--primary">Return to Dashboard</a>
+        </div>
+      </main>
+    </div>
+
+    <!-- Main Authorized Dashboard Shell -->
+    <div id="supervisor-dashboard-shell" class="app-shell" data-app-shell>
+      <div class="app-sidebar__overlay" data-sidebar-overlay aria-hidden="true"></div>
+
+      <aside id="app-sidebar" class="app-sidebar" data-app-sidebar aria-label="Application navigation">
+        <div class="app-sidebar__head">
+          <a class="brand" href="dashboard.html" aria-label="Dashboard home">
+            <span class="brand__mark" aria-hidden="true">KI</span>
+            <span class="brand__text">
+              <span class="brand__name">KAVACH</span>
+              <span class="brand__tagline">Intelligence</span>
+            </span>
+          </a>
+          <button
+            type="button"
+            class="app-sidebar__collapse"
+            data-sidebar-collapse
+            aria-pressed="false"
+            aria-label="Collapse sidebar"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        <nav class="app-nav">
+          <div class="app-nav__section">
+            <p class="app-nav__label">Workspace</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="dashboard.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Dashboard</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="cases.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Cases</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="intelligence.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Intelligence Feed</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="intelligence-search.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Search</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="app-nav__section">
+            <p class="app-nav__label">Output</p>
+            <ul>
+              <li>
+                <a class="app-nav__link is-disabled" href="#" aria-disabled="true" tabindex="-1">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Reports</span>
+                  <span class="app-nav__badge">Soon</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link is-disabled" href="#" aria-disabled="true" tabindex="-1">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Settings</span>
+                  <span class="app-nav__badge">Soon</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="app-nav__section" data-nav-mgmt hidden>
+            <p class="app-nav__label">Management</p>
+            <ul>
+              <li>
+                <a class="app-nav__link is-active" href="supervisor.html" data-nav-supervisor aria-current="page">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Supervisor Portal</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="admin.html" data-nav-admin>
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Admin Panel</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <div class="app-main">
+        <header class="app-topbar" role="banner">
+          <button
+            type="button"
+            class="app-topbar__menu"
+            data-sidebar-toggle
+            aria-expanded="false"
+            aria-controls="app-sidebar"
+            aria-label="Open navigation menu"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+            </svg>
+          </button>
+
+          <form class="app-search" role="search" action="intelligence-search.html" method="GET">
+            <label class="sr-only" for="global-search">Search cases and intelligence</label>
+            <svg class="app-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" />
+            </svg>
+            <input
+              class="app-search__input"
+              type="search"
+              id="global-search"
+              name="q"
+              placeholder="Search cases, domains, UPI handles…"
+              autocomplete="off"
+            />
+          </form>
+
+          <div class="app-topbar__actions">
+            <button type="button" class="icon-btn" aria-label="Notifications, 3 unread">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="icon-btn__badge" data-notification-count>3</span>
+            </button>
+
+            <div class="user-menu" data-user-menu>
+              <button
+                type="button"
+                class="user-menu__trigger"
+                data-user-menu-trigger
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                <span class="user-menu__avatar" data-user-avatar aria-hidden="true">PS</span>
+                <span class="user-menu__name" data-user-name>Supervisor</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="user-menu__dropdown" role="menu">
+                <p class="user-menu__meta">
+                  <strong data-user-menu-name>Supervisor</strong><br />
+                  <span data-user-menu-meta>Cyber Crime Compliance Unit</span>
+                </p>
+                <a class="user-menu__item" href="cases.html" role="menuitem">My cases</a>
+                <button type="button" class="user-menu__item user-menu__item--danger" data-sign-out role="menuitem">
+                  Sign out
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="app-content" id="main">
+          <header class="page-header">
+            <div>
+              <h1 class="page-header__title">Supervisor Portal</h1>
+              <p class="page-header__subtitle">
+                Oversight queue — review investigator reports, compliance validation, and sign-offs.
+              </p>
+            </div>
+          </header>
+
+          <section aria-label="Supervisor statistics">
+            <div class="stats-grid">
+              <article class="stat-card">
+                <p class="stat-card__label">Pending Approvals</p>
+                <p class="stat-card__value" id="stats-pending-count">3</p>
+                <p class="stat-card__hint">Requires review</p>
+              </article>
+              <article class="stat-card stat-card--up">
+                <p class="stat-card__label">Average Review Time</p>
+                <p class="stat-card__value">14h</p>
+                <p class="stat-card__hint">Goal: Under 24 hours</p>
+              </article>
+              <article class="stat-card">
+                <p class="stat-card__label">Compliance Score</p>
+                <p class="stat-card__value">100%</p>
+                <p class="stat-card__hint">Valid OCR metadata</p>
+              </article>
+              <article class="stat-card">
+                <p class="stat-card__label">Active Analysts</p>
+                <p class="stat-card__value">4</p>
+                <p class="stat-card__hint">Reporting to you</p>
+              </article>
+            </div>
+          </se          <div class="supervisor-grid" style="grid-template-columns: 1fr;">
+            <section class="panel" aria-labelledby="queue-title">
+              <div class="panel__header" style="flex-wrap: wrap; gap: var(--space-4);">
+                <h2 class="panel__title" id="queue-title">Oversight & Compliance Controls</h2>
+                <div class="tab-controls" style="display:flex; gap:var(--space-2); flex-wrap:wrap;">
+                  <button type="button" class="btn btn--primary" id="tab-cases-btn">Cases Awaiting Review</button>
+                  <button type="button" class="btn btn--secondary" id="tab-signups-btn">Signups Pending Review</button>
+                  <button type="button" class="btn btn--secondary" id="tab-suspensions-btn">Suspension Reviews</button>
+                </div>
+              </div>
+              <div class="panel__body">
+                <!-- Cases Tab -->
+                <div id="tab-cases-content">
+                  <div id="review-queue-container" class="alert-panel__list">
+                    <!-- JS dynamically renders case review queue items -->
+                  </div>
+                </div>
+
+                <!-- Signups Tab -->
+                <div id="tab-signups-content" hidden>
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role Requested</th>
+                        <th scope="col">Badge & Bureau</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="signup-requests-tbody">
+                      <!-- Filled by JS -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Suspensions Tab -->
+                <div id="tab-suspensions-content" hidden>
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Requester</th>
+                        <th scope="col">Target Account</th>
+                        <th scope="col">Reason Given</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="suspensions-tbody">
+                      <!-- Filled by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>  </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/mock-data.js"></script>
+    <script src="js/supervisor.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

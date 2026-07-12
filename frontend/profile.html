@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Manage your KAVACH INTELLIGENCE user profile and settings."
+    />
+    <title>Profile Settings — KAVACH INTELLIGENCE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <style>
+      .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+      }
+      @media (min-width: 900px) {
+        .profile-grid {
+          grid-template-columns: 2fr 1fr;
+        }
+      }
+      .read-only-badge {
+        font-size: var(--text-xs);
+        color: var(--color-text-muted);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        padding: 2px 8px;
+        border-radius: var(--radius-sm);
+        margin-left: var(--space-2);
+        display: inline-block;
+      }
+      .profile-avatar-large {
+        width: 5.5rem;
+        height: 5.5rem;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+        color: var(--color-text-inverse);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin: 0 auto var(--space-4);
+        border: 4px solid var(--color-border);
+      }
+    </style>
+  </head>
+  <body class="app-body">
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <div class="app-shell" data-app-shell>
+      <div class="app-sidebar__overlay" data-sidebar-overlay aria-hidden="true"></div>
+
+      <!-- App Navigation Sidebar -->
+      <aside id="app-sidebar" class="app-sidebar" data-app-sidebar aria-label="Application navigation">
+        <div class="app-sidebar__head">
+          <a class="brand" href="dashboard.html" aria-label="Dashboard home">
+            <span class="brand__mark" aria-hidden="true">KI</span>
+            <span class="brand__text">
+              <span class="brand__name">KAVACH</span>
+              <span class="brand__tagline">Intelligence</span>
+            </span>
+          </a>
+          <button
+            type="button"
+            class="app-sidebar__collapse"
+            data-sidebar-collapse
+            aria-pressed="false"
+            aria-label="Collapse sidebar"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        <nav class="app-nav">
+          <div class="app-nav__section">
+            <p class="app-nav__label">Workspace</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="dashboard.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Dashboard</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="cases.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Cases</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="intelligence.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Intelligence Feed</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="intelligence-search.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Search</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="app-nav__section">
+            <p class="app-nav__label">Output</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="profile.html" aria-current="page">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Settings</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="app-nav__section" data-nav-mgmt hidden>
+            <p class="app-nav__label">Management</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="supervisor.html" data-nav-supervisor>
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Supervisor Portal</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="admin.html" data-nav-admin>
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Admin Panel</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <div class="app-main">
+        <!-- Top bar -->
+        <header class="app-topbar" role="banner">
+          <button
+            type="button"
+            class="app-topbar__menu"
+            data-sidebar-toggle
+            aria-expanded="false"
+            aria-controls="app-sidebar"
+            aria-label="Open navigation menu"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+            </svg>
+          </button>
+
+          <div style="flex:1"></div>
+
+          <div class="app-topbar__actions">
+            <button type="button" class="icon-btn" aria-label="Notifications" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+
+            <div class="user-menu" data-user-menu>
+              <button
+                type="button"
+                class="user-menu__trigger"
+                data-user-menu-trigger
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                <span class="user-menu__avatar" data-user-avatar aria-hidden="true">PS</span>
+                <span class="user-menu__name" data-user-name>User</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="user-menu__dropdown" role="menu">
+                <p class="user-menu__meta">
+                  <strong data-user-menu-name>User</strong><br />
+                  <span data-user-menu-meta>Cyber Unit</span>
+                </p>
+                <a class="user-menu__item" href="profile.html" role="menuitem">Profile Settings</a>
+                <button type="button" class="user-menu__item user-menu__item--danger" data-sign-out role="menuitem">
+                  Sign out
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-content" id="main">
+          <header class="page-header">
+            <div>
+              <h1 class="page-header__title">Profile Settings</h1>
+              <p class="page-header__subtitle">
+                Manage your credentials, contact information, and account status parameters.
+              </p>
+            </div>
+          </header>
+
+          <div id="profile-alert" class="alert" role="alert" hidden></div>
+
+          <div class="profile-grid">
+            <!-- Left Side: Profile Form -->
+            <section class="panel">
+              <div class="panel__header">
+                <h2 class="panel__title">Personal Details</h2>
+              </div>
+              <div class="panel__body">
+                <form id="profile-form" style="display:flex; flex-direction:column; gap:var(--space-4);">
+                  <div class="form-field">
+                    <label class="form-field__label" for="profile-name">Full Name</label>
+                    <input class="form-field__input" type="text" id="profile-name" name="name" required />
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-field__label" for="profile-email">
+                      Email Address <span class="read-only-badge">Read-only</span>
+                    </label>
+                    <input class="form-field__input" type="email" id="profile-email" name="email" disabled />
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-field__label" for="profile-phone">Phone Number</label>
+                    <input class="form-field__input" type="tel" id="profile-phone" name="phone" />
+                  </div>
+
+                  <!-- Address field for citizens -->
+                  <div class="form-field" id="profile-address-group" hidden>
+                    <label class="form-field__label" for="profile-address">Residential Address</label>
+                    <textarea class="form-field__input" id="profile-address" name="address" rows="3"></textarea>
+                  </div>
+
+                  <!-- Official Fields (Read-Only) -->
+                  <div id="profile-official-group" hidden>
+                    <div class="form-row">
+                      <div class="form-field">
+                        <label class="form-field__label" for="profile-badge">
+                          Badge ID <span class="read-only-badge">Read-only</span>
+                        </label>
+                        <input class="form-field__input" type="text" id="profile-badge" disabled />
+                      </div>
+                      <div class="form-field">
+                        <label class="form-field__label" for="profile-bureau">
+                          Bureau / Department <span class="read-only-badge">Read-only</span>
+                        </label>
+                        <input class="form-field__input" type="text" id="profile-bureau" disabled />
+                      </div>
+                    </div>
+                    <div class="form-field" style="margin-top:var(--space-4);">
+                      <label class="form-field__label" for="profile-legal">
+                        Government ID <span class="read-only-badge">Read-only</span>
+                      </label>
+                      <input class="form-field__input" type="text" id="profile-legal" disabled />
+                    </div>
+                  </div>
+
+                  <!-- Password change section -->
+                  <fieldset class="form-fieldset" style="margin-top:var(--space-2);">
+                    <legend>Change Password</legend>
+                    <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-3);">
+                      Leave password fields blank if you do not wish to change your password.
+                    </p>
+                    <div class="form-field">
+                      <label class="form-field__label" for="profile-pwd">New Password</label>
+                      <input class="form-field__input" type="password" id="profile-pwd" name="password" minlength="6" />
+                    </div>
+                    <div class="form-field" style="margin-top:var(--space-3);">
+                      <label class="form-field__label" for="profile-pwd-confirm">Confirm New Password</label>
+                      <input class="form-field__input" type="password" id="profile-pwd-confirm" />
+                    </div>
+                  </fieldset>
+
+                  <div style="display:flex; justify-content:flex-end; gap:var(--space-3); margin-top:var(--space-2);">
+                    <button type="submit" class="btn btn--primary" id="save-profile-btn">Save Changes</button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <!-- Right Side: Account Overview & Actions -->
+            <div style="display:flex; flex-direction:column; gap:var(--space-6);">
+              <section class="panel" style="text-align:center;">
+                <div class="panel__body">
+                  <div class="profile-avatar-large" id="profile-avatar-large">US</div>
+                  <h3 style="font-size:var(--text-lg); font-weight:700; margin-bottom:var(--space-1);" id="profile-display-name">Username</h3>
+                  <p style="font-size:var(--text-xs); color:var(--color-text-muted); text-transform:uppercase; font-weight:600; letter-spacing:0.05em;" id="profile-display-role">Role</p>
+                  
+                  <hr style="border:0; border-top:1px solid var(--color-border); margin:var(--space-4) 0;" />
+                  
+                  <div style="text-align:left; font-size:var(--text-sm); line-height:1.8;">
+                    <p><strong>Status:</strong> <span class="status-chip status-chip--success" id="profile-display-status">Active</span></p>
+                    <p><strong>Registered Date:</strong> <span id="profile-display-date">Loading...</span></p>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Account deletion / suspension panel -->
+              <section class="panel" style="border-color: rgba(220,38,38,0.25);">
+                <div class="panel__header" style="border-bottom-color: rgba(220,38,38,0.15);">
+                  <h3 class="panel__title" style="color:var(--color-danger);">Danger Zone</h3>
+                </div>
+                <div class="panel__body" style="display:flex; flex-direction:column; gap:var(--space-3);">
+                  <p style="font-size:var(--text-xs); color:var(--color-text-muted); line-height:1.5;">
+                    If you suspect compromised credentials or require account retirement, you can suspend your profile. This action takes effect immediately.
+                  </p>
+                  <button type="button" class="btn btn--danger" id="deactivate-account-btn" style="width:100%;">
+                    Suspend My Account
+                  </button>
+                </div>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Confirm Suspension Dialog Modal -->
+    <div id="suspend-modal" class="modal-overlay" hidden>
+      <div class="modal-card" style="max-width:28rem;">
+        <header class="modal-card__header">
+          <h2 style="color:var(--color-danger);">Confirm account suspension</h2>
+          <button type="button" class="modal-close-btn" id="close-suspend-modal" aria-label="Close modal">&times;</button>
+        </header>
+        <div class="modal-card__form" style="gap:var(--space-4);">
+          <p style="font-size:var(--text-sm); line-height:1.5;">
+            Are you sure you want to suspend your account? You will be logged out immediately and will not be able to log back in until approved by a supervisor/admin.
+          </p>
+          <div class="form-field">
+            <label class="form-field__label" for="suspend-reason">Reason for suspension (optional)</label>
+            <input class="form-field__input" type="text" id="suspend-reason" placeholder="e.g. Compromised credentials or retirement" />
+          </div>
+          <div id="suspend-error" class="alert alert--error" role="alert" hidden></div>
+          <footer class="modal-card__footer">
+            <button type="button" class="btn btn--ghost" id="cancel-suspend">Cancel</button>
+            <button type="button" class="btn btn--danger" id="confirm-suspend-btn">Suspend Account</button>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

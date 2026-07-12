@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="KAVACH INTELLIGENCE Moderator Portal — verify citizen reports, review correlations, and submit suspension requests."
+    />
+    <title>Moderator Portal — KAVACH INTELLIGENCE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <style>
+      .moderator-grid {
+        display: grid;
+        gap: var(--space-6);
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 1024px) {
+        .moderator-grid {
+          grid-template-columns: 2fr 1fr;
+        }
+      }
+      .complaint-card {
+        padding: var(--space-5);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        background: var(--color-background);
+        margin-bottom: var(--space-4);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+      }
+      .complaint-card__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: var(--space-2);
+      }
+      .complaint-card__title {
+        font-size: var(--text-base);
+        font-weight: 700;
+      }
+      .complaint-card__desc {
+        font-size: var(--text-sm);
+        line-height: 1.6;
+        color: var(--color-text);
+        background: var(--color-surface);
+        padding: var(--space-3);
+        border-left: 3px solid var(--color-accent);
+        border-radius: var(--radius-sm);
+      }
+      .correlation-box {
+        background: #fffbeb;
+        border: 1px solid rgba(217, 119, 6, 0.2);
+        border-radius: var(--radius-md);
+        padding: var(--space-3);
+        font-size: var(--text-xs);
+        color: #92400e;
+      }
+      .correlation-box strong {
+        color: #78350f;
+      }
+      .correlation-box a {
+        color: var(--color-primary);
+        font-weight: 600;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body class="app-body">
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <div class="app-shell" data-app-shell>
+      <div class="app-sidebar__overlay" data-sidebar-overlay aria-hidden="true"></div>
+
+      <!-- App Navigation Sidebar -->
+      <aside id="app-sidebar" class="app-sidebar" data-app-sidebar aria-label="Application navigation">
+        <div class="app-sidebar__head">
+          <a class="brand" href="dashboard.html" aria-label="Dashboard home">
+            <span class="brand__mark" aria-hidden="true">KI</span>
+            <span class="brand__text">
+              <span class="brand__name">KAVACH</span>
+              <span class="brand__tagline">Intelligence</span>
+            </span>
+          </a>
+          <button
+            type="button"
+            class="app-sidebar__collapse"
+            data-sidebar-collapse
+            aria-pressed="false"
+            aria-label="Collapse sidebar"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        <nav class="app-nav">
+          <div class="app-nav__section">
+            <p class="app-nav__label">Workspace</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="dashboard.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Dashboard</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="cases.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Cases</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="intelligence.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Intelligence Feed</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="intelligence-search.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Search</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="app-nav__section">
+            <p class="app-nav__label">Output</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="profile.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Settings</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="app-nav__section" data-nav-mgmt hidden>
+            <p class="app-nav__label">Management</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="supervisor.html" data-nav-supervisor>
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Supervisor Portal</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="admin.html" data-nav-admin>
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Admin Panel</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <div class="app-main">
+        <header class="app-topbar" role="banner">
+          <button
+            type="button"
+            class="app-topbar__menu"
+            data-sidebar-toggle
+            aria-expanded="false"
+            aria-controls="app-sidebar"
+            aria-label="Open navigation menu"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+            </svg>
+          </button>
+
+          <div style="flex:1"></div>
+
+          <div class="app-topbar__actions">
+            <div class="user-menu" data-user-menu>
+              <button
+                type="button"
+                class="user-menu__trigger"
+                data-user-menu-trigger
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                <span class="user-menu__avatar" data-user-avatar aria-hidden="true">MP</span>
+                <span class="user-menu__name" data-user-name>Moderator</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="user-menu__dropdown" role="menu">
+                <p class="user-menu__meta">
+                  <strong data-user-menu-name>Moderator</strong><br />
+                  <span data-user-menu-meta>Cyber Verification Unit</span>
+                </p>
+                <a class="user-menu__item" href="profile.html" role="menuitem">Profile Settings</a>
+                <button type="button" class="user-menu__item user-menu__item--danger" data-sign-out role="menuitem">
+                  Sign out
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="app-content" id="main">
+          <!-- Access Denied Gate -->
+          <div id="access-denied-container" style="display: none;">
+            <div class="access-denied-panel" style="text-align:center; padding:4rem; max-width:32rem; margin:4rem auto; border:1px solid var(--color-border); background:var(--color-surface); border-radius:var(--radius-lg);">
+              <h1 style="color:var(--color-danger); margin-bottom:var(--space-2);">Access Restricted</h1>
+              <p>Your user profile is not authorized to access the Moderator review dashboard.</p>
+              <a href="dashboard.html" class="btn btn--primary" style="margin-top:var(--space-4);">Back to Dashboard</a>
+            </div>
+          </div>
+
+          <div id="moderator-shell">
+            <header class="page-header">
+              <div>
+                <h1 class="page-header__title">Moderator Portal</h1>
+                <p class="page-header__subtitle">
+                  Citizen scam reports review queue, cross-case entity correlation checks, and compliance deactivation requests.
+                </p>
+              </div>
+            </header>
+
+            <section aria-label="Moderator stats" style="margin-bottom:var(--space-6);">
+              <div class="stats-grid">
+                <article class="stat-card">
+                  <p class="stat-card__label">Pending Complaints</p>
+                  <p class="stat-card__value" id="stats-pending-complaints">0</p>
+                  <p class="stat-card__hint">Citizen reports awaiting verification</p>
+                </article>
+                <article class="stat-card">
+                  <p class="stat-card__label">Verified Cases Promoted</p>
+                  <p class="stat-card__value">N/A</p>
+                  <p class="stat-card__hint">Synchronized to criminal databases</p>
+                </article>
+              </div>
+            </section>
+
+            <div class="moderator-grid">
+              <!-- Left Panel: Complaints Queue -->
+              <section class="panel">
+                <div class="panel__header">
+                  <h2 class="panel__title">Reports Awaiting Review</h2>
+                  <span class="badge badge--ai">Verification Queue</span>
+                </div>
+                <div class="panel__body" id="complaints-queue-container" style="padding:var(--space-4);">
+                  <!-- JS dynamically inserts citizen reports cards -->
+                </div>
+              </section>
+
+              <!-- Right Panel: Suspension Request Form -->
+              <section class="panel">
+                <div class="panel__header">
+                  <h2 class="panel__title">Request User Suspension</h2>
+                </div>
+                <div class="panel__body panel__body--padded">
+                  <p style="font-size:var(--text-xs); color:var(--color-text-muted); line-height:1.5; margin-bottom:var(--space-4);">
+                    If a citizen account reports spam, fake info, or is compromised, file a suspension request. Supervisors and Admins will verify and take action.
+                  </p>
+                  <form id="suspension-request-form" style="display:flex; flex-direction:column; gap:var(--space-4);">
+                    <div class="form-field">
+                      <label class="form-field__label" for="suspend-target-email">Target User Email</label>
+                      <input class="form-field__input" type="email" id="suspend-target-email" name="email" placeholder="e.g. abuser@citizen.ki" required />
+                    </div>
+                    <div class="form-field">
+                      <label class="form-field__label" for="suspend-reason-desc">Detailed Reason</label>
+                      <textarea class="form-field__input" id="suspend-reason-desc" name="reason" rows="4" placeholder="Describe the abuse or fake reporting pattern..." required></textarea>
+                    </div>
+                    <div id="form-error" class="alert alert--error" role="alert" hidden></div>
+                    <div id="form-success" class="alert alert--success" role="alert" hidden></div>
+                    <button type="submit" class="btn btn--danger" style="width:100%;">Submit Request</button>
+                  </form>
+                </div>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/moderator.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

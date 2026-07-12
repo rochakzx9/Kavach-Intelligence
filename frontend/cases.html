@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="KAVACH INTELLIGENCE — investigation case list." />
+    <title>Cases — KAVACH INTELLIGENCE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+  </head>
+  <body class="app-body">
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <div class="app-shell" data-app-shell>
+      <div class="app-sidebar__overlay" data-sidebar-overlay aria-hidden="true"></div>
+
+      <aside id="app-sidebar" class="app-sidebar" data-app-sidebar aria-label="Application navigation">
+        <div class="app-sidebar__head">
+          <a class="brand" href="dashboard.html">
+            <span class="brand__mark" aria-hidden="true">KI</span>
+            <span class="brand__text">
+              <span class="brand__name">KAVACH</span>
+              <span class="brand__tagline">Intelligence</span>
+            </span>
+          </a>
+          <button type="button" class="app-sidebar__collapse" data-sidebar-collapse aria-pressed="false" aria-label="Collapse sidebar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+        <nav class="app-nav">
+          <div class="app-nav__section">
+            <p class="app-nav__label">Workspace</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="dashboard.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                  </span>
+                  <span class="app-nav__text">Dashboard</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link is-active" href="cases.html" aria-current="page">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" /></svg>
+                  </span>
+                  <span class="app-nav__text">Cases</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="intelligence.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Intelligence Feed</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="intelligence-search.html">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Search</span>
+                </a>
+            </ul>
+          </div>
+          <div class="app-nav__section">
+            <p class="app-nav__label">Output</p>
+            <ul>
+              <li>
+                <a class="app-nav__link is-disabled" href="#" aria-disabled="true" tabindex="-1">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Reports</span>
+                  <span class="app-nav__badge">Soon</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link is-disabled" href="#" aria-disabled="true" tabindex="-1">
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Settings</span>
+                  <span class="app-nav__badge">Soon</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="app-nav__section" data-nav-mgmt hidden>
+            <p class="app-nav__label">Management</p>
+            <ul>
+              <li>
+                <a class="app-nav__link" href="supervisor.html" data-nav-supervisor>
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Supervisor Portal</span>
+                </a>
+              </li>
+              <li>
+                <a class="app-nav__link" href="admin.html" data-nav-admin>
+                  <span class="app-nav__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="app-nav__text">Admin Panel</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <div class="app-main">
+        <header class="app-topbar" role="banner">
+          <button type="button" class="app-topbar__menu" data-sidebar-toggle aria-expanded="false" aria-label="Open navigation menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+            </svg>
+          </button>
+          <form class="app-search" role="search" action="#" onsubmit="return false;">
+            <label class="sr-only" for="global-search">Search cases</label>
+            <svg class="app-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" />
+            </svg>
+            <input class="app-search__input" type="search" id="global-search" placeholder="Filter cases…" />
+          </form>
+          <div class="app-topbar__actions">
+            <div class="user-menu" data-user-menu>
+              <button type="button" class="user-menu__trigger" data-user-menu-trigger aria-expanded="false">
+                <span class="user-menu__avatar" data-user-avatar>PS</span>
+                <span class="user-menu__name" data-user-name>Investigator</span>
+              </button>
+              <div class="user-menu__dropdown" role="menu">
+                <p class="user-menu__meta"><strong data-user-menu-name>Investigator</strong><br /><span data-user-menu-meta></span></p>
+                <a class="user-menu__item" href="dashboard.html" role="menuitem">Dashboard</a>
+                <button type="button" class="user-menu__item user-menu__item--danger" data-sign-out role="menuitem">Sign out</button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="app-content" id="main">
+          <header class="page-header">
+            <div>
+              <h1 class="page-header__title">Cases</h1>
+              <p class="page-header__subtitle">
+                Browse existing investigations and create new intake records for analyst review.
+              </p>
+            </div>
+            <div class="page-header__actions">
+              <a class="btn btn--primary" href="#new-case" id="new-case-trigger">New Case</a>
+            </div>
+          </header>
+
+          <section class="panel" id="new-case" aria-labelledby="new-case-title" hidden>
+            <div class="panel__header">
+              <h2 class="panel__title" id="new-case-title">Case intake</h2>
+              <span class="badge">Module 4</span>
+            </div>
+            <div class="panel__body panel__body--padded">
+              <div id="case-intake-alert" class="alert alert--error" role="alert" hidden></div>
+              <form id="case-intake-form" class="case-intake-form" novalidate>
+                <div class="form-field">
+                  <label class="form-field__label" for="case-title">Case title</label>
+                  <input
+                    class="form-field__input"
+                    id="case-title"
+                    name="title"
+                    type="text"
+                    maxlength="120"
+                    placeholder="UPI cashback fraud via messaging app"
+                    required
+                    aria-describedby="error-title"
+                  />
+                  <span id="error-title" class="form-field__error" role="alert" hidden></span>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="case-status">Status</label>
+                  <select class="form-field__input" id="case-status" name="status" aria-describedby="error-status">
+                    <option value="active">Active</option>
+                    <option value="pending">Pending</option>
+                    <option value="review">In review</option>
+                  </select>
+                  <span id="error-status" class="form-field__error" role="alert" hidden></span>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="case-assignee">Assignee</label>
+                  <input
+                    class="form-field__input"
+                    id="case-assignee"
+                    name="assignee"
+                    type="text"
+                    maxlength="60"
+                    placeholder="P. Sharma"
+                    required
+                    aria-describedby="error-assignee"
+                  />
+                  <span id="error-assignee" class="form-field__error" role="alert" hidden></span>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="case-priority">Priority</label>
+                  <select class="form-field__input" id="case-priority" name="priority">
+                    <option value="high">High</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </div>
+
+                <!-- Victim Information -->
+                <div class="form-section-title" style="grid-column: span 2; margin-top: var(--space-4); border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-1); font-weight: 700; color: var(--color-primary);">Victim Information</div>
+                
+                <div class="form-field">
+                  <label class="form-field__label" for="victim-name">Victim Name</label>
+                  <input class="form-field__input" id="victim-name" name="victimName" placeholder="e.g. Rakesh Kumar" />
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="victim-phone">Victim Phone</label>
+                  <input class="form-field__input" id="victim-phone" name="victimPhone" placeholder="e.g. +91 9876543210" />
+                </div>
+                <div class="form-field" style="grid-column: span 2;">
+                  <label class="form-field__label" for="victim-email">Victim Email</label>
+                  <input class="form-field__input" id="victim-email" name="victimEmail" type="email" placeholder="e.g. rakesh@example.com" />
+                </div>
+
+                <!-- Scam Classification -->
+                <div class="form-section-title" style="grid-column: span 2; margin-top: var(--space-4); border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-1); font-weight: 700; color: var(--color-primary);">Scam Classification</div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="scam-type">Scam Type</label>
+                  <select class="form-field__input" id="scam-type" name="scamType">
+                    <option value="">-- Select Type --</option>
+                    <option value="UPI Cashback Fraud">UPI Cashback Fraud</option>
+                    <option value="Part-Time Job Scam">Part-Time Job Scam</option>
+                    <option value="Investment / Crypto Scam">Investment / Crypto Scam</option>
+                    <option value="Impersonation / Lottery Scam">Impersonation / Lottery Scam</option>
+                    <option value="Non-Delivery of Goods">Non-Delivery of Goods</option>
+                    <option value="Phishing Website">Phishing Website</option>
+                    <option value="Tech Support Scam">Tech Support Scam</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="payment-method">Payment Method</label>
+                  <select class="form-field__input" id="payment-method" name="paymentMethod">
+                    <option value="">-- Select Method --</option>
+                    <option value="UPI">UPI</option>
+                    <option value="NetBanking (IMPS/NEFT)">NetBanking (IMPS/NEFT)</option>
+                    <option value="Credit / Debit Card">Credit / Debit Card</option>
+                    <option value="Cryptocurrency">Cryptocurrency</option>
+                    <option value="Wallet Transfer">Wallet Transfer</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="scam-amount">Amount Lost (INR)</label>
+                  <input class="form-field__input" id="scam-amount" name="scamAmount" type="number" min="0" placeholder="e.g. 25000" />
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="scam-date">Date of Scam</label>
+                  <input class="form-field__input" id="scam-date" name="scamDate" type="date" />
+                </div>
+
+                <!-- Scam platform details -->
+                <div class="form-section-title" style="grid-column: span 2; margin-top: var(--space-4); border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-1); font-weight: 700; color: var(--color-primary);">Scam Platform & Profile Source</div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="scam-platform">Platform</label>
+                  <select class="form-field__input" id="scam-platform" name="scamPlatform">
+                    <option value="">-- Select Platform --</option>
+                    <option value="WhatsApp">WhatsApp</option>
+                    <option value="Telegram">Telegram</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="YouTube">YouTube</option>
+                    <option value="Independent Website">Independent Website</option>
+                    <option value="Email">Email</option>
+                    <option value="SMS">SMS</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="scam-platform-account">Scammer Profile Handle / Name</label>
+                  <input class="form-field__input" id="scam-platform-account" name="scamPlatformAccount" placeholder="e.g. Elite Furnishings Store" />
+                </div>
+                <div class="form-field" style="grid-column: span 2;">
+                  <label class="form-field__label" for="scam-platform-url">Scammer Profile / Channel URL</label>
+                  <input class="form-field__input" id="scam-platform-url" name="scamPlatformUrl" placeholder="e.g. instagram.com/elite_furnishings_store" />
+                </div>
+
+                <!-- Narrative summary -->
+                <div class="form-section-title" style="grid-column: span 2; margin-top: var(--space-4); border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-1); font-weight: 700; color: var(--color-primary);">Scam Narrative</div>
+
+                <div class="form-field" style="grid-column: span 2;">
+                  <label class="form-field__label" for="case-description">Short summary of scam (Complain details)</label>
+                  <textarea class="form-field__input" id="case-description" name="description" rows="4" style="resize: vertical; font-family: inherit;" placeholder="Describe what happened, how they contacted the victim, how the transaction was completed, etc."></textarea>
+                </div>
+
+                <!-- OCR / Evidence section header -->
+                <div class="form-section-title" style="grid-column: span 2; margin-top: var(--space-4); border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-1); font-weight: 700; color: var(--color-primary);">Evidence files & Extracted OCR Details</div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="case-evidence-files">Evidence files</label>
+                  <input
+                    class="form-field__input"
+                    id="case-evidence-files"
+                    name="files"
+                    type="file"
+                    multiple
+                    accept=".png,.jpg,.jpeg,.pdf,.txt"
+                    required
+                    aria-describedby="error-files"
+                  />
+                  <span id="error-files" class="form-field__error" role="alert" hidden></span>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="ocr-phone">OCR Phone (optional)</label>
+                  <input class="form-field__input" id="ocr-phone" name="ocrPhone" placeholder="+91 98XXXXXX42" />
+                </div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="ocr-upi">OCR UPI (optional)</label>
+                  <input class="form-field__input" id="ocr-upi" name="ocrUpi" placeholder="merchant@upi" />
+                </div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="ocr-url">OCR URL / Domain (optional)</label>
+                  <input class="form-field__input" id="ocr-url" name="ocrUrl" placeholder="pay-verify-secure.in" />
+                </div>
+
+                <button type="submit" class="btn btn--primary">Create case</button>
+              </form>
+            </div>
+          </section>
+
+          <section class="panel cases-page-table" aria-labelledby="cases-list-title">
+            <div class="panel__header">
+              <h2 class="panel__title" id="cases-list-title">All cases</h2>
+            </div>
+            <div class="panel__body">
+              <table class="data-table">
+                <caption class="sr-only">Investigation cases assigned to you</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Case</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Assignee</th>
+                    <th scope="col">Evidence</th>
+                  </tr>
+                </thead>
+                <tbody data-all-cases-tbody></tbody>
+              </table>
+            </div>
+          </section>
+
+          <p class="page-header__subtitle cases-page-note" id="upload-note">
+            New case intake includes evidence upload in one flow. You can also add more evidence later from the individual case workspace.
+          </p>
+        </main>
+      </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/mock-data.js"></script>
+    <script src="js/cases-page.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
