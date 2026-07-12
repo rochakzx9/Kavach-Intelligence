@@ -1,11 +1,26 @@
+# Environment variables
 .env
 .env.local
-*.log
-.DS_Store
-__pycache__
-.venv
 
-# Legacy / future JS tooling
-node_modules
-.next
-dist
+# Python virtual environments
+venv/
+backend/venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Uploads (optional - don't track uploaded evidence)
+backend/uploads/
+
+# OS files
+.DS_Store
+
+# JavaScript (future)
+node_modules/
+.next/
+dist/
