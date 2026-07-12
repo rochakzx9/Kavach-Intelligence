@@ -117,16 +117,19 @@
     var statusEl = document.querySelector("[data-case-status]");
     var evidenceCountEl = document.querySelector("[data-case-evidence-count]");
 
-    if (titleEl) titleEl.textContent = currentCase.id + " — " + currentCase.title;
-    if (metaEl) metaEl.textContent = "Assignee: " + currentCase.assignee + " · Priority: " + currentCase.priority.toUpperCase();
+    if (titleEl) titleEl.textContent = (currentCase.id || "") + " — " + (currentCase.title || "");
+    if (metaEl) {
+      var prio = (currentCase.priority || "medium").toUpperCase();
+      metaEl.textContent = "Assignee: " + (currentCase.assignee || "Unassigned") + " · Priority: " + prio;
+    }
     if (statusEl) {
-      statusEl.className = "status-chip status-chip--" + currentCase.status;
-      statusEl.textContent = statusLabel(currentCase.status);
+      statusEl.className = "status-chip status-chip--" + (currentCase.status || "active");
+      statusEl.textContent = statusLabel(currentCase.status || "active");
     }
     
     var submitBtn = document.getElementById("submit-review-btn");
     if (submitBtn) {
-      if (currentCase.status === "active") {
+      if (currentCase.status === "active" || currentCase.status === "pending") {
         submitBtn.style.display = "inline-block";
       } else {
         submitBtn.style.display = "none";
@@ -138,7 +141,7 @@
     var kpis = document.querySelectorAll(".case-kpi-grid .stat-card");
     if (kpis.length >= 3) {
       kpis[0].querySelector(".stat-card__value").textContent = String(currentCase.evidenceCount || 0);
-      kpis[2].querySelector(".stat-card__value").textContent = String(currentCase.correlations.length || 0);
+      kpis[2].querySelector(".stat-card__value").textContent = String((currentCase.correlations || []).length);
     }
   }
 
