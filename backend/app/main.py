@@ -2,7 +2,7 @@ import os
 import json
 import uuid
 import re
-
+import logging
 from urllib.parse import urlparse
 from datetime import datetime
 from typing import List, Optional
@@ -35,34 +35,117 @@ from .schemas import (
 )
 
 from .seed import seed_db
+from .security import hash_password, verify_password, create_access_token, verify_access_token
+
+# Configure standard Python logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+)
+logger = logging.getLogger("kavach")
+
+# Configure dynamically loaded environment variables
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "uploads")
+APP_ENV = os.getenv("APP_ENV", "development")
+BASE_URL = os.getenv("BASE_URL", "")
 
 app = FastAPI(title="Kavach Intelligence API", version="1.0")
 
 # Enable CORS for local static frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For local development, allow all origins
+    allow_origins=["*"],  # For local development / multi-origin API access
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Secure HTTP Headers Middleware
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; "
+        "style-src 'self' 'unsafe-inline' https:; "
+        "img-src 'self' data: http: https:; "
+        "connect-src 'self' ws: wss: http: https:;"
+    )
+    return response
+
+# Global Exception Handlers - prevent stack traces leaking in production
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    logger.error(f"Unhandled error on {request.method} {request.url.path}: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "An internal server error occurred. Please try again later."}
+    )
+
+from fastapi.exceptions import RequestValidationError
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    logger.warning(f"Validation error on {request.method} {request.url.path}: {exc}")
+    return JSONResponse(
+        status_code=422,
+        content={"detail": str(exc)}
+    )
+
 # Create tables & Seed Database on Startup
 @app.on_event("startup")
 def startup_event():
-    # Log which SQLite file is being used
+    # Log which DB engine URL is being used
     from .database import engine
-    print(f"[DEBUG] FastAPI startup using DB URL: {engine.url}")
+    logger.info(f"FastAPI starting up. Using DB URL: {engine.url}")
     db = next(get_db())
     seed_db(db)
     # Ensure upload directory exists
-    os.makedirs("uploads", exist_ok=True)
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    logger.info(f"Upload directory '{UPLOAD_FOLDER}' verified/created.")
+
+# Helper function to sanitize uploaded filenames
+def sanitize_filename(filename: str) -> str:
+    name = os.path.basename(filename)
+    name = re.sub(r'[^a-zA-Z0-9_\.\-]', '', name)
+    if not name or name.startswith('.'):
+        name = f"upload_{uuid.uuid4().hex[:8]}_{name.lstrip('.') or 'file'}"
+    return name
+
+# Helper function to validate file uploads (extension & size)
+def validate_uploaded_file(file: UploadFile, contents: bytes):
+    MAX_FILE_SIZE = 25 * 1024 * 1024  # 25 MB
+    if len(contents) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=400,
+            detail="File exceeds maximum allowed size of 25MB."
+        )
+    ext = file.filename.split(".")[-1].lower()
+    allowed_extensions = {
+        "png", "jpg", "jpeg", "pdf", "csv", "xlsx", "txt", "json", "log", "xml", "tsv"
+    }
+    if ext not in allowed_extensions:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File extension '.{ext}' is not allowed."
+        )
+
+# Helper function to validate session tokens
+def validate_token_and_get_user_id(token: str) -> str:
+    payload = verify_access_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid session token")
+    return payload.get("sub")
 
 # Helper function to add audit logs
 def log_audit(db: Session, user: str, action: str, category: str = "case"):
     audit = AuditLog(user=user, action=action, category=category)
     db.add(audit)
     db.commit()
+
 
 # --- Auth Router ---
 @app.post("/api/v1/auth/signup", response_model=LoginResponse)
@@ -97,7 +180,7 @@ def signup(payload: UserSignup, db: Session = Depends(get_db)):
     new_user = User(
         id=new_id,
         email=email,
-        password=payload.password,
+        password=hash_password(payload.password),
         name=payload.name,
         badge_id=payload.badgeId,
         role=role,
@@ -114,7 +197,7 @@ def signup(payload: UserSignup, db: Session = Depends(get_db)):
     
     log_audit(db, new_user.name, f"User signup: role={role}, status={status_val}", "login")
     
-    token = f"token-{new_user.id}" if status_val == "approved" else ""
+    token = create_access_token(new_user.id, new_user.role) if status_val == "approved" else ""
     profile = UserProfile(
         id=new_user.id,
         email=new_user.email,
@@ -141,7 +224,7 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
         
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-    if payload.password != user.password:
+    if not verify_password(payload.password, user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
         
     # Check registration request status
@@ -163,7 +246,7 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
         
     log_audit(db, user.name, f"Session validated for role: {user.role}", "login")
     
-    token = f"token-{user.id}"
+    token = create_access_token(user.id, user.role)
     profile = UserProfile(
         id=user.id,
         email=user.email,
@@ -182,9 +265,7 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
 
 @app.get("/api/v1/auth/me", response_model=UserProfile)
 def get_me(token: str = Query(...), db: Session = Depends(get_db)):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -193,6 +274,7 @@ def get_me(token: str = Query(...), db: Session = Depends(get_db)):
     return UserProfile(
         id=user.id,
         email=user.email,
+
         name=user.name,
         badgeId=user.badge_id,
         role=user.role,
@@ -207,9 +289,7 @@ def get_me(token: str = Query(...), db: Session = Depends(get_db)):
 
 @app.patch("/api/v1/users/me", response_model=UserProfile)
 def update_profile(payload: UserUpdateProfile, token: str = Query(...), db: Session = Depends(get_db)):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -223,7 +303,7 @@ def update_profile(payload: UserUpdateProfile, token: str = Query(...), db: Sess
     if payload.phone is not None:
         user.phone = payload.phone
     if payload.password is not None:
-        user.password = payload.password
+        user.password = hash_password(payload.password)
         
     db.commit()
     db.refresh(user)
@@ -245,9 +325,7 @@ def update_profile(payload: UserUpdateProfile, token: str = Query(...), db: Sess
 
 @app.delete("/api/v1/users/me")
 def delete_profile(token: str = Query(...), db: Session = Depends(get_db)):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -255,6 +333,7 @@ def delete_profile(token: str = Query(...), db: Session = Depends(get_db)):
     db.delete(user)
     db.commit()
     return {"detail": "Account deleted successfully"}
+
 
 # --- Dashboard Router ---
 @app.get("/api/v1/dashboard/summary")
@@ -318,9 +397,7 @@ def create_citizen_report(
     token: str = Query(...),
     db: Session = Depends(get_db)
 ):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role != "citizen":
         raise HTTPException(status_code=403, detail="Only citizens can submit scam reports.")
@@ -329,6 +406,7 @@ def create_citizen_report(
 
     existing_count = db.query(CitizenReport).count()
     report_id = f"REP-2026-{1000 + existing_count + 1}"
+
 
     scam_dt = None
     if payload.scam_date:
@@ -396,9 +474,7 @@ async def upload_report_evidence(
     url: Optional[str] = Query(None),
     db: Session = Depends(get_db)
 ):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=401, detail="Invalid user session")
@@ -407,13 +483,16 @@ async def upload_report_evidence(
     if not report:
         raise HTTPException(status_code=404, detail="Citizen report not found")
         
-    ev_id = f"ev-{uuid.uuid4().hex[:8]}"
-    filepath = f"uploads/{file.filename}"
     contents = await file.read()
+    validate_uploaded_file(file, contents)
+    
+    sanitized_name = sanitize_filename(file.filename)
+    filepath = os.path.join(UPLOAD_FOLDER, sanitized_name)
     with open(filepath, "wb") as f:
         f.write(contents)
         
-    ext = file.filename.split(".")[-1].lower()
+    ev_id = f"ev-{uuid.uuid4().hex[:8]}"
+    ext = sanitized_name.split(".")[-1].lower()
     ev_type = "document"
     if ext in ["png", "jpg", "jpeg"]:
         ev_type = "screenshot"
@@ -424,7 +503,7 @@ async def upload_report_evidence(
         
     new_evidence = EvidenceItem(
         id=ev_id,
-        filename=file.filename,
+        filename=sanitized_name,
         filepath=filepath,
         type=ev_type,
         size_bytes=len(contents),
@@ -435,7 +514,8 @@ async def upload_report_evidence(
     db.add(new_evidence)
     db.commit()
     
-    log_audit(db, user.name, f"Evidence file {file.filename} uploaded for citizen report {report_id}.", "case")
+    log_audit(db, user.name, f"Evidence file {sanitized_name} uploaded for citizen report {report_id}.", "case")
+
     
     # Check overrides
     if phone or upi or url:
@@ -499,9 +579,7 @@ async def upload_report_evidence(
 
 @app.get("/api/v1/citizen/reports", response_model=List[CitizenReportResponse])
 def get_citizen_reports(token: str = Query(...), db: Session = Depends(get_db)):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -546,12 +624,11 @@ def review_citizen_report(
 ):
     try:
         # Validate token
-        if not token.startswith("token-"):
-            raise HTTPException(status_code=401, detail="Invalid session token")
-        user_id = token.replace("token-", "")
+        user_id = validate_token_and_get_user_id(token)
         user = db.query(User).filter(User.id == user_id).first()
         if not user or user.role not in ["moderator", "supervisor", "admin"]:
             raise HTTPException(status_code=403, detail="Unauthorized to review citizen reports.")
+
 
         report = db.query(CitizenReport).filter(CitizenReport.id == report_id).first()
         if not report:
@@ -634,13 +711,11 @@ def review_citizen_report(
 # --- Supervisor & Admin Signup Approval Router ---
 @app.get("/api/v1/supervisor/signup-requests", response_model=List[UserProfile])
 def get_supervisor_signup_requests(token: str = Query(...), db: Session = Depends(get_db)):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role not in ["supervisor", "admin"]:
         raise HTTPException(status_code=403, detail="Only supervisors can view signup requests.")
-        
+
     # Supervisors approve Moderator and Investigator requests
     requests = db.query(User).filter(
         User.role.in_(["moderator", "investigator"]),
@@ -671,12 +746,11 @@ def supervisor_signup_action(
     token: str = Query(...),
     db: Session = Depends(get_db)
 ):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role not in ["supervisor", "admin"]:
         raise HTTPException(status_code=403, detail="Unauthorized.")
+
         
     target = db.query(User).filter(User.id == req_user_id).first()
     if not target:
@@ -701,9 +775,7 @@ def supervisor_signup_action(
 
 @app.get("/api/v1/admin/signup-requests", response_model=List[UserProfile])
 def get_admin_signup_requests(token: str = Query(...), db: Session = Depends(get_db)):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role != "admin":
         raise HTTPException(status_code=403, detail="Only Admins can view supervisor signup requests.")
@@ -738,9 +810,7 @@ def admin_signup_action(
     token: str = Query(...),
     db: Session = Depends(get_db)
 ):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role != "admin":
         raise HTTPException(status_code=403, detail="Only Admins can perform this action.")
@@ -773,9 +843,7 @@ def moderator_request_suspension(
     token: str = Query(...),
     db: Session = Depends(get_db)
 ):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role not in ["moderator", "supervisor", "admin"]:
         raise HTTPException(status_code=403, detail="Unauthorized to request suspensions.")
@@ -811,9 +879,7 @@ def moderator_request_suspension(
 
 @app.get("/api/v1/supervisor/suspensions", response_model=List[SuspensionRequestResponse])
 def get_supervisor_suspensions(token: str = Query(...), db: Session = Depends(get_db)):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role not in ["supervisor", "admin"]:
         raise HTTPException(status_code=403, detail="Unauthorized.")
@@ -846,9 +912,7 @@ def supervisor_verify_suspension(
     token: str = Query(...),
     db: Session = Depends(get_db)
 ):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role not in ["supervisor", "admin"]:
         raise HTTPException(status_code=403, detail="Unauthorized.")
@@ -873,9 +937,7 @@ def supervisor_verify_suspension(
 
 @app.get("/api/v1/admin/suspensions", response_model=List[SuspensionRequestResponse])
 def get_admin_suspensions(token: str = Query(...), db: Session = Depends(get_db)):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role != "admin":
         raise HTTPException(status_code=403, detail="Only Admin can view forwarded suspensions.")
@@ -908,9 +970,7 @@ def admin_suspension_action(
     token: str = Query(...),
     db: Session = Depends(get_db)
 ):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role != "admin":
         raise HTTPException(status_code=403, detail="Only Admin can action suspensions.")
@@ -1118,9 +1178,7 @@ def get_cases(status: Optional[str] = None, db: Session = Depends(get_db)):
 
 @app.post("/api/v1/cases", response_model=CaseResponse)
 def create_case(payload: CaseCreate, token: str = Query(...), db: Session = Depends(get_db)):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -1305,9 +1363,7 @@ def update_case(
     token: str = Query(...),
     db: Session = Depends(get_db)
 ):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -1394,9 +1450,7 @@ def update_case(
 
 @app.delete("/api/v1/cases/{case_id}")
 def delete_case(case_id: str, token: str = Query(...), db: Session = Depends(get_db)):
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user or user.role != "admin":
         raise HTTPException(status_code=403, detail="Only Admins can delete cases.")
@@ -1427,8 +1481,10 @@ async def upload_evidence(
         raise HTTPException(status_code=404, detail="Case not found")
         
     ev_id = f"ev-{uuid.uuid4().hex[:8]}"
-    filepath = f"uploads/{file.filename}"
+    safe_name = sanitize_filename(file.filename)
     contents = await file.read()
+    validate_uploaded_file(file, contents)
+    filepath = os.path.join(UPLOAD_FOLDER, safe_name)
     with open(filepath, "wb") as f:
         f.write(contents)
         
@@ -1607,7 +1663,7 @@ def simulated_ocr_extract(db: Session, ev: EvidenceItem):
             else:
                 ev.ocr_status = "no_text_found"
         except Exception as e:
-            print(f"[ERROR] failed to read evidence file: {e}")
+            logger.error(f"Failed to read evidence file: {e}")
             ev.ocr_status = "failed"
     else:
         ev.ocr_status = "no_text_found"
@@ -1982,7 +2038,7 @@ def create_report(case_id: str, payload: ReportCreate, db: Session = Depends(get
     lines.append("================================================")
     
     # Write report text file
-    filepath = f"uploads/{filename}"
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
     with open(filepath, "w") as f:
         f.write("\n".join(lines))
         
@@ -2087,9 +2143,7 @@ def get_user_stats(db: Session = Depends(get_db)):
 @app.post("/api/v1/admin/clear_all")
 def clear_all_data(token: str = Query(...), db: Session = Depends(get_db)):
     # Validate token and admin role
-    if not token.startswith("token-"):
-        raise HTTPException(status_code=401, detail="Invalid session token")
-    user_id = token.replace("token-", "")
+    user_id = validate_token_and_get_user_id(token)
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -2148,7 +2202,7 @@ def get_supervisor_queue(status: Optional[str] = Query(None), page: int = Query(
     return {"total": total, "page": page, "size": size, "queue": response}
 
 # Serve uploads statically (for reports downloading)
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
 
 # Serve static frontend files
 frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend"))
